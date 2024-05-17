@@ -1,0 +1,19 @@
+specVersion: 0.35.0
+name: io-context
+runtime: python
+registry: 10.20.30.211:5000
+image: 10.20.30.211:5000/knative-neomodel:latest
+imageDigest: sha256:2b546ba4d01eefb0e157f916a6978bb8725419c87ae2a9adb0a6b9998a451092
+created: 2024-03-12T16:05:21.675228592Z
+build:
+  builder: pack
+run:
+  envs:
+  - name: NEO4J_URL
+    value: bolt://neo4j.context-team-a:7687
+  - name: NEO4J_USERNAME
+    value: neo4j
+  - name: NEO4J_PASSWORD
+    value: password
+deploy:
+  namespace: context-team-a

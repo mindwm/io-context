@@ -1,0 +1,18 @@
+name: Commit Stage
+
+on: push
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Knative tools
+        uses: thomasvitale/kn-func-build@v1
+        with:
+          registry_url: ghcr.io
+          registry_username: metacoma
+          registry_token: ${{ secrets.GITHUB_TOKEN }}
+          function_path: .
+          function_name: io-context
+          function_version: 3.9.4
