@@ -23,7 +23,9 @@ neo4j_url = os.getenv("NEO4J_URL")
 neo4j_username = os.getenv("NEO4J_USERNAME")
 neo4j_password = os.getenv("NEO4J_PASSWORD")
 
-config.DRIVER = GraphDatabase().driver(neo4j_url, auth=(neo4j_username, neo4j_password))
+
+config.DATABASE_URL = f"bolt://{neo4j_user}:{neo4j_password}@{neo4j_url}" 
+config.DRIVER = GraphDatabase.driver(f"bolt://{neo4j_url}") 
 
 class MindwmUser(StructuredNode):
     username = StringProperty(required = True)
