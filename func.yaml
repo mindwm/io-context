@@ -2,7 +2,7 @@ specVersion: 0.35.0
 name: io-context
 runtime: python
 image: metacoma/knative-neomodel:latest
-imageDigest: sha256:758d29816e0a6f5c0252acd514ec95fc75e1ba00a6981f419b96297c3a019a8c
+imageDigest: sha256:cc1d33972d9faa649a57efde7a68a649bfc345db3b267d5444df07627bd192ee
 created: 2024-03-12T16:05:21.675228592Z
 build:
   builder: pack
