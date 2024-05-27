@@ -78,7 +78,7 @@ def main(context: Context):
         username = source[1]
         hostname = source[2]
         assert(source[3] == 'tmux')
-        socket_path = str(base64.b64decode(source[4])).strip()
+        socket_path = str(base64.b64decode(source[4]).decode("utf-8")).strip()
         pid = source[5]
         session_name = source[6]
         pane_id = int(source[7])
