@@ -24,27 +24,33 @@ neo4j_username = os.getenv("NEO4J_USERNAME")
 neo4j_password = os.getenv("NEO4J_PASSWORD")
 
 
-config.DATABASE_URL = f"bolt://{neo4j_user}:{neo4j_password}@{neo4j_url}" 
+config.DATABASE_URL = f"bolt://{neo4j_username}:{neo4j_password}@{neo4j_url}" 
 config.DRIVER = GraphDatabase.driver(f"bolt://{neo4j_url}") 
 
 class MindwmUser(StructuredNode):
     username = StringProperty(required = True)
     host = RelationshipTo('MindwmHost', 'HAS_MINDWM_HOST')
 
-class MindwmHost(StructuredNode): 
+class MindwmHost(StructuredNode):
     hostname = StringProperty(required = True)
-    tmux = RelationshipTo('Tmux', 'HAS_TMUX')
+    tmux = RelationshipTo('Tmux', 'HAS_TMUX', cardinality=OneOrMore)
 
 class Tmux(StructuredNode):
     socket_path = StringProperty(required = True)
-    session = RelationshipTo('TmuxSession', 'HAS_TMUX_SESSION')
+    host_id = IntegerProperty(required = True)
+    host = RelationshipFrom('MindwmHost', 'HAS_TMUX', cardinality=One)
+    session = RelationshipTo('TmuxSession', 'HAS_TMUX_SESSION', cardinality=OneOrMore)
 
 class TmuxSession(StructuredNode):
     name = StringProperty(required = True)
-    pane = RelationshipTo('TmuxPane', 'HAS_TMUX_PANE')
+    tmux_id = IntegerProperty(required = True)
+    socket_path = RelationshipFrom('Tmux', 'HAS_TMUX', cardinality=One)
+    pane = RelationshipTo('TmuxPane', 'HAS_TMUX_PANE', cardinality=OneOrMore)
 
 class TmuxPane(StructuredNode):
     pane_id = IntegerProperty(required = True)
+    session_id = IntegerProperty(required = True)
+    session = RelationshipFrom('TmuxSession', 'HAS_TMUX_PANE', cardinality=One)
     title = StringProperty()
     io_document = Relationship('IoDocument', 'HAS_IO_DOCUMENT')
 
@@ -94,19 +100,24 @@ def main(context: Context):
         user.host.connect(host)
 
         tmux = Tmux.get_or_create({
-                "socket_path": socket_path
+                "socket_path": socket_path,
+                "host_id": host.id,
+                "host": host,
             })[0]
 
         host.tmux.connect(tmux)
 
         tmux_session = TmuxSession.get_or_create({
-                "name": session_name
+                "name": session_name,
+                "tmux_id": tmux.id,
+                "tmux": tmux.socket_path,
             })[0]
 
         tmux.session.connect(tmux_session)
 
         tmux_pane = TmuxPane.get_or_create({
-                "pane_id": pane_id
+                "pane_id": pane_id,
+                "session_id": tmux_session.id,
             })[0]
 
         tmux_session.pane.connect(tmux_pane)
