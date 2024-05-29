@@ -1,3 +1,4 @@
+[![build](https://github.com/mindwm/io-context/actions/workflows/push.yml/badge.svg)](https://github.com/mindwm/mindwm-gitops/actions/workflows/push.yml)
 # Python HTTP Function
 
 Welcome to your new Python function project! The boilerplate function
