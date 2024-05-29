@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run func build 
-        run: func build --push
+        run: func build --push --verbose
