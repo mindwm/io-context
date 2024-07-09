@@ -3,9 +3,31 @@ name: Commit Stage
 on: push
 
 jobs:
-  publish:
-    runs-on: [self-hosted, staging]
+  io-context-build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Run func build 
-        run: func build --push --verbose
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kn and func
+        run: |
+          wget https://github.com/knative/client/releases/download/knative-v1.14.0/kn-linux-amd64
+          mv kn-linux-amd64 kn
+          chmod +x kn
+          sudo mv kn /usr/local/bin/
+          wget https://github.com/knative/func/releases/download/knative-v1.14.0/func_linux_amd64
+          mv func_linux_amd64 kn-func
+          chmod +x kn-func
+          sudo mv kn-func /usr/local/bin/
+
+      - name: Log in to GitHub Container Registry
+        run: echo ${{ secrets.MINDWM_TOKEN }} | docker login ghcr.io -u metacoma --password-stdin
+        #run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and Push io-context-service
+        run: |
+          kn func build --verbose --push -i ghcr.io/mindwm/io-context:latest
+
