@@ -16,7 +16,7 @@ from neo4j import GraphDatabase
 
 from neomodel import (config, StructuredNode, StringProperty, IntegerProperty,
 	UniqueIdProperty, RelationshipTo, RelationshipFrom, Relationship, One, OneOrMore,
-    DateTimeProperty)
+    DateTimeProperty, JSONProperty)
 
 
 neo4j_url = os.getenv("NEO4J_URL")
@@ -52,7 +52,7 @@ class TmuxPane(StructuredNode):
     session_id = IntegerProperty(required = True)
     session = RelationshipFrom('TmuxSession', 'HAS_TMUX_PANE', cardinality=One)
     title = StringProperty()
-    prompt = StringProperty()
+    contextParameters = JSONProperty()
     io_document = Relationship('IoDocument', 'HAS_IO_DOCUMENT')
 
 class IoDocument(StructuredNode):
