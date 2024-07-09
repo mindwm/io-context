@@ -16,7 +16,8 @@ from neo4j import GraphDatabase
 
 from neomodel import (config, StructuredNode, StringProperty, IntegerProperty,
 	UniqueIdProperty, RelationshipTo, RelationshipFrom, Relationship, One, OneOrMore,
-    DateTimeProperty, JSONProperty)
+    DateTimeProperty)
+from neomodel.properties import JSONProperty
 
 
 neo4j_url = os.getenv("NEO4J_URL")
