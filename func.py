@@ -53,7 +53,7 @@ class TmuxPane(StructuredNode):
     session_id = IntegerProperty(required = True)
     session = RelationshipFrom('TmuxSession', 'HAS_TMUX_PANE', cardinality=One)
     title = StringProperty()
-    contextParameters = JSONProperty()
+    contextParameters = JSONProperty(default={})
     io_document = Relationship('IoDocument', 'HAS_IO_DOCUMENT')
 
 class IoDocument(StructuredNode):
